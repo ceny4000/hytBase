@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "/WEB-INF/config/log4j.dtd">
+<log4j:configuration >
+	<appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="[%5p] [%c] - %m%n" />
+		</layout>
+	</appender>
+    <appender name="FileAppender" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${aplog.root}/AppOut.log" />
+		<param name="Encoding" value="big5" />
+		<param name="MaxFileSize" value="30720KB" />
+		<param name="MaxBackupIndex" value="20" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [%t] [%c] - %m%n" />
+		</layout>
+	</appender>
+	
+	<root>
+		<priority value="DEBUG"></priority> 
+		<appender-ref ref="ConsoleAppender"/>
+	</root>
+	
+</log4j:configuration>

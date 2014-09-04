@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd 
+	http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd
+	http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+	http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring/ehcache-spring-1.1.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+ 
+  <!-- Enable annotation-based Spring MVC controllers (eg: @Controller annotation) -->
+  <mvc:annotation-driven/>
+   
+  <!-- Classpath scanning of @Component, @Service, etc annotated class -->
+  <context:component-scan base-package="com.hyt.base.service.*" />
+  <context:component-scan base-package="com.hyt.base.persistence.*" />
+  
+  <!-- Use for Spring Security -->
+  <bean id="customUserService" class="com.hyt.base.service.CustomUserService"></bean>
+
+  <!-- Resolve view name into jsp file located on /WEB-INF -->
+  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/WEB-INF/" />
+    <property name="suffix" value=".jsp" />
+  </bean>
+   
+  <!-- MySQL Datasource with Commons DBCP connection pooling -->
+  <bean class="org.apache.commons.dbcp.BasicDataSource" id="dataSource">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    <property name="url" value="jdbc:mysql://localhost:3306/test"/>
+    <property name="username" value=""/>
+    <property name="password" value=""/>
+  </bean>
+  
+  <jpa:repositories base-package="com.hyt.base.dao" repository-impl-postfix="Impl" entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager"  query-lookup-strategy="create-if-not-found"/>
+
+  <!-- EntityManagerFactory -->
+  <bean class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" id="entityManagerFactory">
+    <property name="persistenceUnitName" value="persistenceUnit"/>
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+   
+  <!-- Transaction Manager -->
+  <bean class="org.springframework.orm.jpa.JpaTransactionManager" id="transactionManager">
+    <property name="entityManagerFactory" ref="entityManagerFactory"/>
+  </bean>
+   
+  <!-- Enable @Transactional annotation -->
+  <tx:annotation-driven/>
+ 
+</beans>
